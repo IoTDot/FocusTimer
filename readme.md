@@ -11,6 +11,7 @@
 ------------
 
 ##### The lengths of individual timers can be edited by changing the values in the code
-mainTimerMinutes = 5;  <-- *Enter the main countdown time here in minutes (e.g. 5)*
-breakTimerMinutes = 2; <-- *Enter the break time here in minutes (e.g. 2)*
-shortBreakSeconds = 6; <-- *Enter the break time between countdowns here in seconds (e.g.* 6)
+```C
+mainTimerMinutes = 5;  // *Enter the main countdown time here in minutes (e.g. 5)*  
+breakTimerMinutes = 2; // *Enter the break time here in minutes (e.g. 2)*  
+shortBreakSeconds = 6; // *Enter the break time between countdowns here in seconds (e.g.6)*  
