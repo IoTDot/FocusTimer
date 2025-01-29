@@ -5,7 +5,7 @@
 - 1 x press - reset timer
 - 2 x press - change main countdown between 5 and 10 minutes
 - 3 x press - change break countdown between 2 and 5 minutes
-- 4 x presses - start break countdown immediately
+- 4 x press - start break countdown immediately
 - The reset button reboots the device
 
 ------------
