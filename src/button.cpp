@@ -17,31 +17,25 @@ void handleButtonPress() {
   buttonLastState = buttonState;
 
   if (!buttonState && (currentTime - lastButtonPress > 500) && buttonPressCount > 0) {
-    if (buttonPressCount == 2) {
+    if (buttonPressCount == 1) {
+      // Resetowanie licznika
+      startTime = millis();
+      isShortBreak = false;
+      isLongBreak = false;
+    } else if (buttonPressCount == 2) {
+      // Zmiana głównego odliczania między 5 a 10 minut
       timerDuration = (timerDuration == (unsigned long)(mainTimerMinutes) * 60 * 1000) ? 10 * 60 * 1000 : mainTimerMinutes * 60 * 1000;
     } else if (buttonPressCount == 3) {
+      // Zmiana czasu przerwy między 2 a 5 minut
       breakTimerDuration = (breakTimerDuration == 2 * 60 * 1000) ? 5 * 60 * 1000 : 2 * 60 * 1000;
       displayTime(breakTimerDuration, false, "BREAK");
       delay(1000);
     } else if (buttonPressCount == 4) {
-      if (!isShortBreak && !isLongBreak) {
-        isLongBreak = true;
-        startTime = millis();
-      } else if (isLongBreak) {
-        isShortBreak = true;
-        isLongBreak = false;
-        startTime = millis();
-      } else if (isShortBreak) {
-        isShortBreak = false;
-        startTime = millis();
-      }
+      // Natychmiastowe rozpoczęcie przerwy
+      isShortBreakCountdown = true;
+      startTime = millis();
     }
 
-    if (buttonPressCount != 4) {
-      startTime = millis();
-      isShortBreak = false;
-      isLongBreak = false;
-    }
     buttonPressCount = 0;
   }
 }

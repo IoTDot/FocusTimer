@@ -13,9 +13,9 @@ unsigned long shortBreakDuration = shortBreakSeconds * 1000;
 
 bool isShortBreak = false;
 bool isLongBreak = false;
+bool isShortBreakCountdown = false;
 unsigned long lastButtonPress = 0;
 int buttonPressCount = 0;
-bool isShortBreakCountdown = false;
 unsigned long startTime;
 bool buttonLastState = HIGH;
 unsigned long debounceTime = 50;

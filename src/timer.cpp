@@ -11,9 +11,14 @@ void updateTimers() {
     remainingTime = shortBreakDuration - elapsedTime;
     if (elapsedTime >= shortBreakDuration) {
       isShortBreakCountdown = false;
+      if (isShortBreak) {
+        isShortBreak = false;  // Przechodzi do głównego licznika po krótkiej przerwie
+      } else {
+        isShortBreak = true;   // Przechodzi do przerwy (BREAK) po głównym liczniku
+      }
       startTime = millis();
     }
-    displayTime(remainingTime, true);
+    displayTime(remainingTime, true, ""); // Usunięcie napisu "SHORT"
     return;
   }
 
@@ -39,11 +44,11 @@ void updateTimers() {
   }
 
   if (isLongBreak) {
-    displayTime(remainingTime, true);
+    displayTime(remainingTime, true, "LONG");
   } else if (isShortBreak) {
     displayTime(remainingTime, false, "BREAK");
   } else {
-    displayTime(remainingTime);
+    displayTime(remainingTime, false, "");
   }
 
   delay(100);
