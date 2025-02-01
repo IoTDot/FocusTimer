@@ -31,7 +31,7 @@ bool initializeDisplay() {
       if (address < 16) Serial.print("0");
       Serial.println(address, HEX);
       nDevices++;
-      if (address == 0x3C || address == 0x3D) {
+      if (address == 0x3C || address == 0x3D || address == 0x7A || address == 0x7B) {
         isDisplayI2C = true;
       }
     }
@@ -46,7 +46,10 @@ bool initializeDisplay() {
   if (isDisplayI2C) {
     Serial.println("Initializing display over I2C...");
     display = &displayI2C;
-    if (!display->begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    if (!display->begin(SSD1306_SWITCHCAPVCC, 0x3C) &&
+        !display->begin(SSD1306_SWITCHCAPVCC, 0x3D) &&
+        !display->begin(SSD1306_SWITCHCAPVCC, 0x7A) &&
+        !display->begin(SSD1306_SWITCHCAPVCC, 0x7B)) {
       Serial.println("SSD1306 I2C initialization failed");
       display = nullptr;
     } else {
