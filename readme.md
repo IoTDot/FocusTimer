@@ -44,9 +44,6 @@ shortBreakSeconds = 6; // Enter the break time between countdowns here in second
 
 Important Notes:
 
-On the ESP8266, GPIO15 (D8) must be pulled low during boot. Since OLED CS pins are usually pulled high when inactive, connect it via a pull-down resistor (e.g., 10kΩ) to GND to ensure proper booting.
-Ensure that no other devices are using these GPIO pins, which could cause conflicts.
-
 Remember that the ESP8266 is a 3.3V device; make sure your display is compatible.
 
 
