@@ -33,7 +33,7 @@ jobs:
      - name: Upload Artifacts
        uses: actions/upload-artifact@v4.3.1
        with:
-         name: Alexa-IR-bridge-ESP8266
+         name: FocusTimer
          path: .pio/build/nodemcuv2/firmware.bin
          if-no-files-found: error
 
@@ -58,7 +58,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: Alexa-IR-bridge-ESP32
+          name: FocusTimer
           path: .pio/build/esp32dev/firmware.bin
           if-no-files-found: error
 
