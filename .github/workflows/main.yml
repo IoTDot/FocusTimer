@@ -33,7 +33,7 @@ jobs:
      - name: Upload Artifacts
        uses: actions/upload-artifact@v4.3.1
        with:
-         name: FocusTimer
+         name: Focus-Timer-ESP8266
          path: .pio/build/nodemcuv2/firmware.bin
          if-no-files-found: error
 
@@ -58,7 +58,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: FocusTimer
+          name: Focus-Timer-ESP32
           path: .pio/build/esp32dev/firmware.bin
           if-no-files-found: error
 
@@ -88,14 +88,14 @@ jobs:
           tag_name: ${{ steps.release-version.outputs.next-version-name }}
           name: ESP-IR-BLASTER ${{ steps.release-version.outputs.next-version-name }}
       
-      - name: Upload NodeMCU V2 release asset
+      - name: Upload ESP8266 release asset
         uses: shogo82148/actions-upload-release-asset@v1.7.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: artifacts/Alexa-IR-bridge-ESP8266/firmware.bin
-          asset_name: ESP-IR-BLASTER-ESP8266_${{ steps.release-version.outputs.next-version-name }}.bin
+          asset_path: artifacts/Focus-Timer-ESP8266/firmware.bin
+          asset_name: Focus-Timer-ESP8266_${{ steps.release-version.outputs.next-version-name }}.bin
           asset_content_type: application/octet-stream
       
       - name: Upload ESP32 release asset
@@ -104,6 +104,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: artifacts/Alexa-IR-bridge-ESP32/firmware.bin
-          asset_name: Alexa-IR-bridge-ESP32_${{ steps.release-version.outputs.next-version-name }}.bin
+          asset_path: artifacts/Aocus-Timer-ESP32/firmware.bin
+          asset_name: Focus-Timer-ESP32_${{ steps.release-version.outputs.next-version-name }}.bin
           asset_content_type: application/octet-stream
