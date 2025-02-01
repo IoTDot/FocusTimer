@@ -86,7 +86,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.release-version.outputs.next-version-name }}
-          name: ESP-IR-BLASTER ${{ steps.release-version.outputs.next-version-name }}
+          name: Focus Timer ${{ steps.release-version.outputs.next-version-name }}
       
       - name: Upload ESP8266 release asset
         uses: shogo82148/actions-upload-release-asset@v1.7.4
