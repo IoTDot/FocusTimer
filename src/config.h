@@ -16,6 +16,9 @@
   #define OLED_DC     17
   #define OLED_RESET  -1
 
+  // Dioda LED jest aktywna w stanie HIGH na ESP32
+  #define LED_ACTIVE_LOW false
+
 #else
   #include <ESP8266WiFi.h>
   #define BUTTON_BOOT 0
@@ -30,6 +33,9 @@
   #define OLED_CS     15 // D8
   #define OLED_DC     5  // D1
   #define OLED_RESET  -1
+
+  // Dioda LED jest aktywna w stanie LOW na ESP8266
+  #define LED_ACTIVE_LOW true
 
 #endif
 
@@ -53,7 +59,7 @@ extern unsigned long startTime;
 extern bool buttonLastState;
 extern unsigned long debounceTime;
 
-// Nowa zmienna globalna do wskazania typu wyświetlacza (jeśli potrzebna)
+// Zmienna globalna do wskazania typu wyświetlacza
 extern bool isDisplayI2C;
 
 #endif

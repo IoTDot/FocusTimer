@@ -16,10 +16,13 @@ void setup() {
     WiFi.mode(WIFI_OFF);
     ledcSetup(0, 5000, 8); // Kanał PWM 0, 5 kHz, 8-bitowa rozdzielczość
     ledcAttachPin(LED_BUILTIN, 0); // Przypisanie pinu LED_BUILTIN do kanału PWM 0
-  #else
+  #else   // Dla ESP8266
     WiFi.mode(WIFI_OFF);
     WiFi.forceSleepBegin();
+    delay(1);
     pinMode(LED_BUILTIN, OUTPUT); // Ustawienie pinu LED_BUILTIN jako wyjście
+    analogWriteRange(1023);       // Ustawienie zakresu PWM 0-1023
+    analogWriteFreq(1000);        // Ustawienie częstotliwości PWM na 1kHz
   #endif
   delay(5);
 
