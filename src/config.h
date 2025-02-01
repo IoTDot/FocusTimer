@@ -6,8 +6,8 @@
   #define BUTTON_BOOT 0
 
   // I2C pins for ESP32
-  #define OLED_SDA 21  // Update to your SDA pin
-  #define OLED_SCL 22  // Update to your SCL pin
+  #define OLED_SDA 21  // Aktualizuj do swojego pinu SDA
+  #define OLED_SCL 22  // Aktualizuj do swojego pinu SCL
 
   // SPI pins for ESP32
   #define OLED_CLK    18
@@ -21,8 +21,8 @@
   #define BUTTON_BOOT 0
 
   // I2C pins for ESP8266
-  #define OLED_SDA D2  // Update to your SDA pin
-  #define OLED_SCL D1  // Update to your SCL pin
+  #define OLED_SDA D2  // Aktualizuj do swojego pinu SDA
+  #define OLED_SCL D1  // Aktualizuj do swojego pinu SCL
 
   // SPI pins for ESP8266
   #define OLED_CLK    14 // D5
@@ -33,7 +33,7 @@
 
 #endif
 
-// Declarations of global variables
+// Deklaracje zmiennych globalnych
 extern int mainTimerMinutes;
 extern int breakTimerMinutes;
 extern int shortBreakSeconds;
@@ -53,7 +53,7 @@ extern unsigned long startTime;
 extern bool buttonLastState;
 extern unsigned long debounceTime;
 
-// New global variable to indicate display type (if needed)
+// Nowa zmienna globalna do wskazania typu wyświetlacza (jeśli potrzebna)
 extern bool isDisplayI2C;
 
 #endif

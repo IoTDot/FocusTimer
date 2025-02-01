@@ -83,7 +83,7 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
     display->setTextSize(4);
 
     String timeText = (seconds < 10) ? String(minutes) + ":0" + String(seconds) : String(minutes) + ":" + String(seconds);
-    int16_t textWidth = timeText.length() * 24; // Approximate text width
+    int16_t textWidth = timeText.length() * 24; // Przybliżona szerokość tekstu
     xPos = (128 - textWidth) / 2;
     display->setCursor(xPos, yPos);
     display->print(timeText);
@@ -92,7 +92,7 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
   if (inverted || isShortBreakCountdown) {
     display->setTextSize(5);
     String timeText = String(seconds);
-    int16_t textWidth = (seconds < 10) ? 30 : 60; // Approximate text width
+    int16_t textWidth = (seconds < 10) ? 30 : 60; // Przybliżona szerokość tekstu
     xPos = (128 - textWidth) / 2;
     display->setCursor(xPos, yPos);
     display->print(timeText);
@@ -100,7 +100,7 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
 
   if (label[0] != '\0') {
     display->setTextSize(2);
-    int16_t labelWidth = 12 * strlen(label); // Approximate label width
+    int16_t labelWidth = 12 * strlen(label); // Przybliżona szerokość etykiety
     xPos = (128 - labelWidth) / 2;
     display->setCursor(xPos, 50);
     display->print(label);
