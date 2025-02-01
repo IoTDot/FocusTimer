@@ -1,5 +1,5 @@
-#include "timer.h"
 #include "config.h"
+#include "timer.h"
 #include "display.h"
 
 void updateTimers() {
@@ -12,13 +12,13 @@ void updateTimers() {
     if (elapsedTime >= shortBreakDuration) {
       isShortBreakCountdown = false;
       if (isShortBreak) {
-        isShortBreak = false;  // Przechodzi do głównego licznika po krótkiej przerwie
+        isShortBreak = false;  // Transition to main timer after short break
       } else {
-        isShortBreak = true;   // Przechodzi do przerwy (BREAK) po głównym liczniku
+        isShortBreak = true;   // Transition to break (BREAK) after main timer
       }
       startTime = millis();
     }
-    displayTime(remainingTime, true, ""); // Usunięcie napisu "SHORT"
+    displayTime(remainingTime, true, ""); // Remove "SHORT" label
     return;
   }
 

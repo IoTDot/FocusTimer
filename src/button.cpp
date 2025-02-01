@@ -1,5 +1,5 @@
-#include "button.h"
 #include "config.h"
+#include "button.h"
 #include "display.h"
 #include "timer.h"
 
@@ -18,20 +18,20 @@ void handleButtonPress() {
 
   if (!buttonState && (currentTime - lastButtonPress > 500) && buttonPressCount > 0) {
     if (buttonPressCount == 1) {
-      // Resetowanie licznika
+      // Reset the timer
       startTime = millis();
       isShortBreak = false;
       isLongBreak = false;
     } else if (buttonPressCount == 2) {
-      // Zmiana głównego odliczania między 5 a 10 minut
+      // Toggle main timer between 5 and 10 minutes
       timerDuration = (timerDuration == (unsigned long)(mainTimerMinutes) * 60 * 1000) ? 10 * 60 * 1000 : mainTimerMinutes * 60 * 1000;
     } else if (buttonPressCount == 3) {
-      // Zmiana czasu przerwy między 2 a 5 minut
+      // Toggle break time between 2 and 5 minutes
       breakTimerDuration = (breakTimerDuration == 2 * 60 * 1000) ? 5 * 60 * 1000 : 2 * 60 * 1000;
       displayTime(breakTimerDuration, false, "BREAK");
       delay(1000);
     } else if (buttonPressCount == 4) {
-      // Natychmiastowe rozpoczęcie przerwy
+      // Start short break immediately
       isShortBreakCountdown = true;
       startTime = millis();
     }
