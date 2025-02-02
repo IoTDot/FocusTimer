@@ -6,8 +6,8 @@
   #define BUTTON_BOOT 0
 
   // I2C pins for ESP32
-  #define OLED_SDA 21  // Aktualizuj do swojego pinu SDA
-  #define OLED_SCL 22  // Aktualizuj do swojego pinu SCL
+  #define OLED_SDA 21  // Możesz dostosować do swojego pinu SDA
+  #define OLED_SCL 22  // Możesz dostosować do swojego pinu SCL
 
   // SPI pins for ESP32
   #define OLED_CLK    18
@@ -24,8 +24,8 @@
   #define BUTTON_BOOT 0
 
   // I2C pins for ESP8266
-  #define OLED_SDA D2  // Aktualizuj do swojego pinu SDA
-  #define OLED_SCL D1  // Aktualizuj do swojego pinu SCL
+  #define OLED_SDA D2  // Możesz dostosować do swojego pinu SDA
+  #define OLED_SCL D1  // Możesz dostosować do swojego pinu SCL
 
   // SPI pins for ESP8266
   #define OLED_CLK    14 // D5
@@ -56,10 +56,20 @@ extern unsigned long lastButtonPress;
 extern int buttonPressCount;
 extern unsigned long startTime;
 
+// Zmienna globalna do przechowywania czasu rozpoczęcia ogólnego odliczania
+extern unsigned long globalStartTime;
+
 extern bool buttonLastState;
 extern unsigned long debounceTime;
 
 // Zmienna globalna do wskazania typu wyświetlacza
 extern bool isDisplayI2C;
 
-#endif
+// Zmienne do zarządzania potwierdzeniem zmiany ustawień
+extern bool isConfirmationDisplay;
+extern unsigned long confirmationStartTime;
+extern unsigned long confirmationDuration;
+extern unsigned long confirmationValue;
+extern char confirmationLabel[10]; // Przywrócona deklaracja confirmationLabel
+
+#endif // CONFIG_H

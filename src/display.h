@@ -6,13 +6,16 @@
 #include <Wire.h>
 #include <SPI.h>
 
-// Declare the display pointer as external
+// Deklaracja wskaźnika do wyświetlacza jako zewnętrzna
 extern Adafruit_SSD1306* display;
 
-// Function to initialize the display
+// Funkcja do inicjalizacji wyświetlacza
 bool initializeDisplay();
 
-// Function to display time
+// Funkcja do wyświetlania czasu
 void displayTime(unsigned long remainingTime, bool inverted = false, const char* label = "");
 
-#endif
+// Funkcja do wyświetlania globalnego timera
+void displayGlobalTimer();
+
+#endif // DISPLAY_H

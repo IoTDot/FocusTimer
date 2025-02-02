@@ -4,5 +4,6 @@
 #include "config.h"
 
 void updateTimers();
+void displayGlobalTimer();
 
-#endif
+#endif // TIMER_H

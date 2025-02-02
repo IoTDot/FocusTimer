@@ -2,21 +2,21 @@
 #include "config.h"
 #include "timer.h"
 
-// Define two display objects (for I2C and SPI)
+// Definicja dwóch obiektów wyświetlacza (dla I2C i SPI)
 Adafruit_SSD1306 displayI2C(128, 64, &Wire, OLED_RESET);
 Adafruit_SSD1306 displaySPI(128, 64, &SPI, OLED_DC, OLED_RESET, OLED_CS);
 
-// Pointer to the active display
+// Wskaźnik do aktywnego wyświetlacza
 Adafruit_SSD1306* display = nullptr;
 
-// Function to initialize the display
+// Funkcja do inicjalizacji wyświetlacza
 bool initializeDisplay() {
   Serial.println("Initializing display...");
 
-  // Initialize I2C communication
+  // Inicjalizacja komunikacji I2C
   Wire.begin(OLED_SDA, OLED_SCL);
 
-  // Scan for I2C devices
+  // Skanowanie urządzeń I2C
   isDisplayI2C = false;
   byte error, address;
   int nDevices = 0;
@@ -58,14 +58,14 @@ bool initializeDisplay() {
     }
   }
 
-  // If I2C display not found or failed to initialize, try SPI
+  // Jeśli wyświetlacz I2C nie został znaleziony lub nie udało się go zainicjalizować, spróbuj SPI
   Serial.println("Attempting to initialize display over SPI...");
   SPI.begin();
   display = &displaySPI;
   if (!display->begin(SSD1306_SWITCHCAPVCC)) {
     Serial.println("SSD1306 SPI initialization failed");
     display = nullptr;
-    return false; // Both initializations failed
+    return false; // Obie inicjalizacje nie powiodły się
   } else {
     Serial.println("SSD1306 SPI initialized successfully");
     return true;
@@ -77,15 +77,16 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
   unsigned long seconds = (remainingTime % 60000) / 1000;
 
   display->invertDisplay(inverted);
-  display->clearDisplay();
+  // Nie czyścimy wyświetlacza tutaj
 
   int16_t xPos = 0;
-  int16_t yPos = 10;
+  int16_t yPos = 16; // Pozycja Y głównego timera
 
   if (!inverted && !isShortBreakCountdown) {
     display->setTextSize(4);
 
-    String timeText = (seconds < 10) ? String(minutes) + ":0" + String(seconds) : String(minutes) + ":" + String(seconds);
+    String timeText = (seconds < 10) ? String(minutes) + ":0" + String(seconds)
+                                     : String(minutes) + ":" + String(seconds);
     int16_t textWidth = timeText.length() * 24; // Przybliżona szerokość tekstu
     xPos = (128 - textWidth) / 2;
     display->setCursor(xPos, yPos);
@@ -103,11 +104,33 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
 
   if (label[0] != '\0') {
     display->setTextSize(2);
-    int16_t labelWidth = 12 * strlen(label); // Przybliżona szerokość etykiety
+
+    // Obliczanie szerokości napisu dla setTextSize(2)
+    int16_t labelWidth = 12 * strlen(label); // Każdy znak ma około 12 pikseli szerokości przy rozmiarze 2
     xPos = (128 - labelWidth) / 2;
-    display->setCursor(xPos, 50);
+    int16_t labelYPos = 52; // Dostosuj tę wartość w razie potrzeby
+
+    display->setCursor(xPos, labelYPos);
     display->print(label);
   }
 
-  display->display();
+  // Nie wywołujemy display->display() tutaj
+}
+
+void displayGlobalTimer() {
+  unsigned long currentTime = millis();
+  unsigned long elapsedTime = currentTime - globalStartTime;
+  unsigned long hours = elapsedTime / 3600000;
+  unsigned long minutes = (elapsedTime % 3600000) / 60000;
+  unsigned long seconds = (elapsedTime % 60000) / 1000;
+
+  // Zwiększony rozmiar bufora dla większych wartości
+  char buffer[12];
+  snprintf(buffer, sizeof(buffer), "%lu:%02lu:%02lu", hours, minutes, seconds);
+
+  display->setTextSize(1);
+  display->setCursor(0, 0); // Globalny timer pozostaje na swojej oryginalnej pozycji
+  display->print(buffer);
+
+  // Nie wywołujemy display->display() tutaj
 }

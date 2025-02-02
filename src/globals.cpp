@@ -1,6 +1,6 @@
 #include "config.h"
 
-// Define global variables
+// Definicje zmiennych globalnych
 
 int mainTimerMinutes = 5;
 int breakTimerMinutes = 2;
@@ -18,8 +18,18 @@ unsigned long lastButtonPress = 0;
 int buttonPressCount = 0;
 unsigned long startTime = 0;
 
+// Zmienna globalna do przechowywania czasu rozpoczęcia ogólnego odliczania
+unsigned long globalStartTime = 0;
+
 bool buttonLastState = HIGH;
 unsigned long debounceTime = 50;
 
-// Initialize the display type indicator
+// Inicjalizacja wskaźnika typu wyświetlacza
 bool isDisplayI2C = false;
+
+// Zmienne do zarządzania potwierdzeniem zmiany ustawień
+bool isConfirmationDisplay = false;
+unsigned long confirmationStartTime = 0;
+unsigned long confirmationDuration = 1000; // Czas trwania potwierdzenia w milisekundach
+unsigned long confirmationValue = 0;
+char confirmationLabel[10] = ""; // Przywrócona definicja confirmationLabel

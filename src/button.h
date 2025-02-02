@@ -5,4 +5,4 @@
 
 void handleButtonPress();
 
-#endif
+#endif // BUTTON_H

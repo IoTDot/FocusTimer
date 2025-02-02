@@ -42,7 +42,11 @@ void setup() {
   display->println("IoTDot Timer");
   display->display();
 
-  startTime = millis();
+  // Synchronizacja startTime i globalStartTime z pełnymi sekundami
+  unsigned long currentMillis = millis();
+  unsigned long remainder = currentMillis % 1000;
+  globalStartTime = currentMillis - remainder; // Ustawienie globalnego czasu startu
+  startTime = globalStartTime; // Ustawienie startTime w synchronizacji z globalnym timerem
 }
 
 void loop() {
