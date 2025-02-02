@@ -2,6 +2,9 @@
 #include "config.h"
 #include "timer.h"
 
+// Załączamy niestandardową czcionkę
+#include <Fonts/FreeSans9pt7b.h>  // Możesz zmienić na inną czcionkę, jeśli chcesz
+
 // Definicja dwóch obiektów wyświetlacza (dla I2C i SPI)
 Adafruit_SSD1306 displayI2C(128, 64, &Wire, OLED_RESET);
 Adafruit_SSD1306 displaySPI(128, 64, &SPI, OLED_DC, OLED_RESET, OLED_CS);
@@ -72,6 +75,7 @@ bool initializeDisplay() {
   }
 }
 
+// Funkcja do wyświetlania czasu
 void displayTime(unsigned long remainingTime, bool inverted, const char* label) {
   unsigned long minutes = remainingTime / 60000;
   unsigned long seconds = (remainingTime % 60000) / 1000;
@@ -84,39 +88,65 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
 
   if (!inverted && !isShortBreakCountdown) {
     display->setTextSize(4);
+    display->setFont(); // Używamy domyślnej czcionki
 
     String timeText = (seconds < 10) ? String(minutes) + ":0" + String(seconds)
                                      : String(minutes) + ":" + String(seconds);
-    int16_t textWidth = timeText.length() * 24; // Przybliżona szerokość tekstu
-    xPos = (128 - textWidth) / 2;
-    display->setCursor(xPos, yPos);
+
+    // Obliczanie szerokości i wysokości tekstu timera
+    int16_t x1, y1;
+    uint16_t w, h;
+    display->getTextBounds(timeText.c_str(), 0, 0, &x1, &y1, &w, &h);
+
+    xPos = (128 - w) / 2;
+    display->setCursor(xPos, yPos - y1); // Korekta pozycji Y z uwzględnieniem linii bazowej
     display->print(timeText);
   }
 
   if (inverted || isShortBreakCountdown) {
     display->setTextSize(5);
+    display->setFont(); // Używamy domyślnej czcionki
+
     String timeText = String(seconds);
-    int16_t textWidth = (seconds < 10) ? 30 : 60; // Przybliżona szerokość tekstu
-    xPos = (128 - textWidth) / 2;
-    display->setCursor(xPos, yPos);
+
+    // Obliczanie szerokości i wysokości tekstu
+    int16_t x1, y1;
+    uint16_t w, h;
+    display->getTextBounds(timeText.c_str(), 0, 0, &x1, &y1, &w, &h);
+
+    xPos = (128 - w) / 2;
+    display->setCursor(xPos, yPos - y1); // Korekta pozycji Y z uwzględnieniem linii bazowej
     display->print(timeText);
   }
 
   if (label[0] != '\0') {
-    display->setTextSize(2);
+    // Ustawiamy niestandardową czcionkę
+    display->setFont(&FreeSans9pt7b);
+    display->setTextSize(1); // Dla niestandardowej czcionki używamy TextSize 1
 
-    // Obliczanie szerokości napisu dla setTextSize(2)
-    int16_t labelWidth = 12 * strlen(label); // Każdy znak ma około 12 pikseli szerokości przy rozmiarze 2
-    xPos = (128 - labelWidth) / 2;
-    int16_t labelYPos = 52; // Dostosuj tę wartość w razie potrzeby
+    // Obliczanie szerokości i wysokości napisu
+    int16_t x1, y1;
+    uint16_t w, h;
+    display->getTextBounds(label, 0, 0, &x1, &y1, &w, &h);
 
-    display->setCursor(xPos, labelYPos);
+    // Wyśrodkowanie napisu w poziomie
+    xPos = (128 - w) / 2;
+
+    // Ustawienie pozycji napisu na dole ekranu
+    int16_t labelYPos = 64 - h - 2; // 2 piksele marginesu od dołu
+
+    // Korekta pozycji Y z uwzględnieniem linii bazowej
+    display->setCursor(xPos, labelYPos - y1);
     display->print(label);
+
+    // Resetujemy czcionkę do domyślnej
+    display->setFont();
   }
 
   // Nie wywołujemy display->display() tutaj
 }
 
+// Funkcja do wyświetlania globalnego timera
 void displayGlobalTimer() {
   unsigned long currentTime = millis();
   unsigned long elapsedTime = currentTime - globalStartTime;
@@ -129,6 +159,7 @@ void displayGlobalTimer() {
   snprintf(buffer, sizeof(buffer), "%lu:%02lu:%02lu", hours, minutes, seconds);
 
   display->setTextSize(1);
+  display->setFont(); // Używamy domyślnej czcionki
   display->setCursor(0, 0); // Globalny timer pozostaje na swojej oryginalnej pozycji
   display->print(buffer);
 
