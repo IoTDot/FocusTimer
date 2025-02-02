@@ -2,8 +2,11 @@
 #include "config.h"
 #include "timer.h"
 
-// Załączamy niestandardową czcionkę
-#include <Fonts/FreeMono9pt7b.h>  // Jeśli chcesz użyć innej czcionki, zmień to załączenie
+// Załączamy czcionkę dla globalnego licznika
+#include <Fonts/FreeMono9pt7b.h>
+
+// Załączamy czcionkę dla napisu "BREAK"
+#include <Fonts/FreeSans9pt7b.h>  // Możesz zmienić tę czcionkę, jeśli chcesz
 
 // Definicja dwóch obiektów wyświetlacza (dla I2C i SPI)
 Adafruit_SSD1306 displayI2C(128, 64, &Wire, OLED_RESET);
@@ -117,7 +120,7 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
   }
 
   if (label[0] != '\0') {
-    display->setFont(&FreeMono9pt7b);
+    display->setFont(&FreeSans9pt7b); // Używamy czcionki dla napisu "BREAK"
     display->setTextSize(1);
 
     int16_t x1, y1;
@@ -126,11 +129,11 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
 
     xPos = (128 - w) / 2;
     // Przesuwamy napis "BREAK" o 2 piksele w dół
-    int16_t labelYPos = 64 - h;
+    int16_t labelYPos = 64 - h; // Poprzednio było 64 - h - 2
     display->setCursor(xPos, labelYPos - y1);
     display->print(label);
 
-    display->setFont();
+    display->setFont(); // Resetujemy czcionkę do domyślnej
   }
 
   // Nie wywołujemy display->display() tutaj
@@ -148,24 +151,23 @@ void displayGlobalTimer() {
   char buffer[12];
   snprintf(buffer, sizeof(buffer), "%lu:%02lu:%02lu", hours, minutes, seconds);
 
-  // Używamy niestandardowej czcionki
+  // Używamy czcionki FreeMono9pt7b dla globalnego licznika
   display->setFont(&FreeMono9pt7b);
-  display->setTextSize(1); // Dla niestandardowej czcionki zazwyczaj używamy TextSize 1
+  display->setTextSize(1); // Dla niestandardowych czcionek używamy TextSize 1
 
   // Obliczamy wymiary tekstu
   int16_t x1, y1;
   uint16_t w, h;
   display->getTextBounds(buffer, 0, 0, &x1, &y1, &w, &h);
 
-  // Ustawiamy pozycję kursora z uwzględnieniem linii bazowej
-  int16_t xPos = 0; // Możesz dostosować, jeśli chcesz wyśrodkować tekst
-  int16_t yPos = 0 - y1;
+  // Wyśrodkujmy tekst w poziomie
+  int16_t xPos = (128 - w) / 2;
+  int16_t yPos = 0 - y1; // Ustawienie pozycji na górze wyświetlacza
 
   display->setCursor(xPos, yPos);
   display->print(buffer);
 
-  // Resetujemy czcionkę do domyślnej
-  display->setFont();
+  display->setFont(); // Resetujemy czcionkę do domyślnej
 
   // Nie wywołujemy display->display() tutaj
 }
