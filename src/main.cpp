@@ -2,6 +2,7 @@
 #include "display.h"
 #include "button.h"
 #include "timer.h"
+#include "wifi_manager.h"
 
 #ifndef LED_BUILTIN
   #ifdef ESP32
@@ -12,6 +13,18 @@
 #endif
 
 void setup() {
+  Serial.begin(115200); // Inicjalizacja komunikacji szeregowej do debugowania
+
+  // Wyłączamy Wi-Fi na starcie
+  #ifdef ESP32
+    WiFi.disconnect(true, true);
+    WiFi.mode(WIFI_OFF);
+  #else // ESP8266
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    WiFi.forceSleepBegin();
+  #endif
+
   #ifdef ESP32
     WiFi.mode(WIFI_OFF);
     ledcSetup(0, 5000, 8); // Kanał PWM 0, 5 kHz, 8-bitowa rozdzielczość
@@ -27,8 +40,6 @@ void setup() {
   delay(5);
 
   pinMode(BUTTON_BOOT, INPUT_PULLUP);
-
-  Serial.begin(115200); // Inicjalizacja komunikacji szeregowej do debugowania
 
   if (!initializeDisplay()) {
     Serial.println("Failed to initialize display");
@@ -52,4 +63,5 @@ void setup() {
 void loop() {
   handleButtonPress();
   updateTimers();
+  handleWiFi(); // Dodajemy obsługę Wi-Fi
 }

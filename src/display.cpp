@@ -1,6 +1,8 @@
 #include "display.h"
 #include "config.h"
 #include "timer.h"
+#include "wifi_manager.h" // Potrzebujemy znać stan Wi-Fi
+#include "wifi_icon.h"    // Plik z ikoną Wi-Fi
 
 // Załączamy czcionkę dla globalnego licznika
 #include <Fonts/FreeMono9pt7b.h>
@@ -170,4 +172,44 @@ void displayGlobalTimer() {
   display->setFont(); // Resetujemy czcionkę do domyślnej
 
   // Nie wywołujemy display->display() tutaj
+}
+
+// Funkcja do wyświetlania ikony Wi-Fi
+void displayWiFiIcon() {
+  static unsigned long lastBlinkTime = 0;
+  static bool iconVisible = true;
+
+  if (wifiEnabled) {
+    if (wifiConnected) {
+      // Połączone z Wi-Fi, wyświetlamy ikonę stale
+      display->drawBitmap(128 - WIFI_ICON_WIDTH, 0, wifi_icon_bmp, WIFI_ICON_WIDTH, WIFI_ICON_HEIGHT, SSD1306_WHITE);
+    } else {
+      // Nie jesteśmy połączeni, ikona miga
+      if (millis() - lastBlinkTime >= 500) { // Częstotliwość migania co 500 ms
+        lastBlinkTime = millis();
+        iconVisible = !iconVisible;
+      }
+      if (iconVisible) {
+        display->drawBitmap(128 - WIFI_ICON_WIDTH, 0, wifi_icon_bmp, WIFI_ICON_WIDTH, WIFI_ICON_HEIGHT, SSD1306_WHITE);
+      }
+    }
+  }
+  // Jeśli Wi-Fi jest wyłączone, nie wyświetlamy ikony
+}
+
+// Funkcja do aktualizacji wyświetlacza
+void updateDisplay() {
+  display->clearDisplay();
+
+  // Wyświetlanie czasu (timerów)
+  // Zakładam, że funkcja displayTime() jest wywoływana w odpowiednim miejscu w kodzie, np. w updateTimers()
+
+  // Wyświetlanie globalnego licznika
+  displayGlobalTimer();
+
+  // Wyświetlanie ikony Wi-Fi
+  displayWiFiIcon();
+
+  // Aktualizacja wyświetlacza
+  display->display();
 }

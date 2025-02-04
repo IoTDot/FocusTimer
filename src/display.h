@@ -1,3 +1,4 @@
+// src/display.h
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
@@ -17,5 +18,8 @@ void displayTime(unsigned long remainingTime, bool inverted = false, const char*
 
 // Funkcja do wyświetlania globalnego timera
 void displayGlobalTimer();
+
+// Funkcja do wyświetlania ikony Wi-Fi
+void displayWiFiIcon();
 
 #endif // DISPLAY_H

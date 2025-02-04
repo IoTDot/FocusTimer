@@ -1,5 +1,18 @@
+// src/config.h
+
 #ifndef CONFIG_H
 #define CONFIG_H
+
+#include <Arduino.h>
+
+// Dodajemy stałe Wi-Fi
+#define WIFI_SSID "test_2.9"
+#define WIFI_PASSWORD "zaq1@WSX"
+
+// Deklaracje zmiennych globalnych związanych z Wi-Fi
+extern bool wifiEnabled;
+extern bool wifiConnected;
+extern bool wifiConnecting;
 
 #ifdef ESP32
   #include <WiFi.h>

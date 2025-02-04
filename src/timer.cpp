@@ -1,6 +1,8 @@
+// src/timer.cpp
 #include "config.h"
 #include "timer.h"
 #include "display.h"
+#include "wifi_manager.h" // Aby znać stan Wi-Fi
 
 void updateTimers() {
   unsigned long currentTime = millis();
@@ -17,6 +19,9 @@ void updateTimers() {
 
       // Wyświetlamy czas potwierdzenia
       displayTime(confirmationValue, false, confirmationLabel);
+
+      // Wyświetlamy ikonę Wi-Fi
+      displayWiFiIcon();
 
       // Aktualizujemy wyświetlacz
       display->display();
@@ -50,6 +55,13 @@ void updateTimers() {
     // Rysujemy odliczanie krótkiej przerwy
     displayTime(remainingTime, true, "");
 
+    // Wyświetlamy ikonę Wi-Fi
+    displayWiFiIcon();
+
+    // Aktualizujemy wyświetlacz
+    display->display();
+
+    // Sterowanie diodą LED
     // Włącz LED z mocą 40%
     #ifdef ESP32
       int pwmValue = 63; // 25% jasności LED (zakres PWM 0 do 255)
@@ -109,7 +121,7 @@ void updateTimers() {
       }
     }
 
-    if (isShortBreak) {
+    if (isShortBreak || isLongBreak) {
       displayTime(remainingTime, false, "BREAK");
     } else {
       displayTime(remainingTime, false, "");
@@ -117,10 +129,13 @@ void updateTimers() {
 
     // Wyświetlamy globalny licznik czasu
     displayGlobalTimer();
-  }
 
-  // Aktualizujemy wyświetlacz
-  display->display();
+    // Wyświetlamy ikonę Wi-Fi
+    displayWiFiIcon();
+
+    // Aktualizujemy wyświetlacz
+    display->display();
+  }
 
   delay(100);
 }

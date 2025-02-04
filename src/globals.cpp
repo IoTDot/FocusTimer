@@ -1,4 +1,11 @@
+// src/globals.cpp
+
 #include "config.h"
+
+// Definicje zmiennych globalnych związanych z Wi-Fi
+bool wifiEnabled = false;
+bool wifiConnected = false;
+bool wifiConnecting = false;
 
 // Definicje zmiennych globalnych
 

@@ -1,7 +1,10 @@
+// src/button.cpp
+
 #include "config.h"
 #include "button.h"
 #include "display.h"
 #include "timer.h"
+#include "wifi_manager.h" // Nowy plik do obsługi Wi-Fi
 #include <string.h> // Dołączenie biblioteki dla strcpy
 
 void handleButtonPress() {
@@ -49,6 +52,14 @@ void handleButtonPress() {
       unsigned long remainder = elapsedGlobalTime % 1000;
       startTime = millis() - remainder; // Synchronizacja z pełną sekundą
       isShortBreakCountdown = true;
+    } else if (buttonPressCount == 5) {
+      // Włączanie lub wyłączanie Wi-Fi
+      wifiEnabled = !wifiEnabled; // Przełączanie stanu Wi-Fi
+      if (wifiEnabled) {
+        startWiFiConnection();
+      } else {
+        stopWiFiConnection();
+      }
     }
 
     buttonPressCount = 0;
