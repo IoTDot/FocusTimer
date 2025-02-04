@@ -89,7 +89,7 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
   // Nie czyścimy wyświetlacza tutaj
 
   int16_t xPos = 0;
-  int16_t yPos = 20; // Pozostawiamy tę wartość, aby zrobić miejsce dla globalnego licznika
+  int16_t yPos = 0; // Zmienimy tę wartość później
 
   if (!inverted && !isShortBreakCountdown) {
     display->setTextSize(4);
@@ -103,7 +103,8 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
     display->getTextBounds(timeText.c_str(), 0, 0, &x1, &y1, &w, &h);
 
     xPos = (128 - w) / 2;
-    display->setCursor(xPos, yPos - y1);
+    yPos = (64 - h) / 2 - y1; // Wyśrodkowanie pionowe
+    display->setCursor(xPos, yPos);
     display->print(timeText);
   }
 
@@ -117,7 +118,8 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
     display->getTextBounds(timeText.c_str(), 0, 0, &x1, &y1, &w, &h);
 
     xPos = (128 - w) / 2;
-    display->setCursor(xPos, yPos - y1);
+    yPos = (64 - h) / 2 - y1; // Wyśrodkowanie pionowe
+    display->setCursor(xPos, yPos);
     display->print(timeText);
   }
 
@@ -130,16 +132,14 @@ void displayTime(unsigned long remainingTime, bool inverted, const char* label) 
     display->getTextBounds(label, 0, 0, &x1, &y1, &w, &h);
 
     xPos = (128 - w) / 2;
-    // Przesuwamy napis "BREAK" o 2 piksele w dół
-    int16_t labelYPos = 64 - h; // Poprzednio było 64 - h - 2
+    int16_t labelYPos = 64 - h - 2; // Pozycja napisu "BREAK" przy dolnej krawędzi
     display->setCursor(xPos, labelYPos - y1);
     display->print(label);
 
     display->setFont(); // Resetujemy czcionkę do domyślnej
   }
-
-  // Nie wywołujemy display->display() tutaj
 }
+
 
 // Funkcja do wyświetlania globalnego licznika
 void displayGlobalTimer() {

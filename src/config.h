@@ -5,9 +5,9 @@
 
 #include <Arduino.h>
 
-// Dodajemy stałe Wi-Fi
-#define WIFI_SSID "test_2.9"
-#define WIFI_PASSWORD "zaq1@WSX"
+// Nazwa i hasło sieci Wi-Fi
+#define WIFI_SSID "your_wifi_ssid"
+#define WIFI_PASSWORD "your_wifi_password"
 
 // Deklaracje zmiennych globalnych związanych z Wi-Fi
 extern bool wifiEnabled;
