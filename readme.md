@@ -6,18 +6,29 @@
 - 2 x press - change main countdown between 5 and 10 minutes
 - 3 x press - change break countdown between 2 and 5 minutes
 - 4 x press - start break countdown immediately
+- 5 x press - start or stop WiFi module to connect/disconnect to network for which credentials were provided
 - The reset button reboots the device
 
 ------------
 
 ### The lengths of individual timers can be edited by changing the values in the code (globals.cpp)
 
-```C
-mainTimerMinutes = 5;  // Enter the main countdown time here in minutes (e.g. 5)  
-breakTimerMinutes = 2; // Enter the break time here in minutes (e.g. 2)  
-shortBreakSeconds = 6; // Enter the break time between countdowns here in seconds (e.g.6)
+```C++
+int mainTimerMinutes = 5;  // Enter the main countdown time here in minutes (e.g. 5)  
+int breakTimerMinutes = 2; // Enter the break time here in minutes (e.g. 2)  
+int shortBreakSeconds = 6; // Enter the break time between countdowns here in seconds (e.g.6)
 ```
 
+------------
+
+### WiFi credentials settings
+
+Change the WiFi network name and its password to the desired ones (config.h)
+
+```C++
+#define WIFI_SSID "your_wifi_ssid"
+#define WIFI_PASSWORD "your_wifi_password"
+```
 ------------
 
 ### Physical connections to the OLED display for ESP32 and ESP8266
