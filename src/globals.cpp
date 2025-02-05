@@ -39,4 +39,9 @@ bool isConfirmationDisplay = false;
 unsigned long confirmationStartTime = 0;
 unsigned long confirmationDuration = 1000; // Czas trwania potwierdzenia w milisekundach
 unsigned long confirmationValue = 0;
-char confirmationLabel[10] = ""; // Przywrócona definicja confirmationLabel
+char confirmationLabel[10] = "";
+
+// Definicje zmiennych globalnych dla statystyk
+unsigned long totalStudyTime = 0;
+unsigned long totalBreakTime = 0;
+unsigned int studySessions = 0;

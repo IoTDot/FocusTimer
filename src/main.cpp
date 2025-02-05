@@ -1,8 +1,27 @@
+// src/main.cpp
+
+#define BLYNK_PRINT Serial
+
+// Definiujemy BLYNK_TEMPLATE_ID i BLYNK_DEVICE_NAME
+#define BLYNK_TEMPLATE_ID "Your_Template_ID"
+#define BLYNK_TEMPLATE_NAME "Your_Template_Name"
+
 #include "config.h"
 #include "display.h"
 #include "button.h"
 #include "timer.h"
 #include "wifi_manager.h"
+
+#ifdef ESP32
+  #include <WiFi.h>
+  #include <BlynkSimpleEsp32.h>
+#elif defined(ESP8266)
+  #include <ESP8266WiFi.h>
+  #include <BlynkSimpleEsp8266.h>
+#endif
+
+// Obiekt Blynk jest zdefiniowany tylko tutaj
+// Upewnij się, że biblioteka Blynk jest dołączona tylko w tym pliku
 
 #ifndef LED_BUILTIN
   #ifdef ESP32
@@ -26,12 +45,9 @@ void setup() {
   #endif
 
   #ifdef ESP32
-    WiFi.mode(WIFI_OFF);
     ledcSetup(0, 5000, 8); // Kanał PWM 0, 5 kHz, 8-bitowa rozdzielczość
     ledcAttachPin(LED_BUILTIN, 0); // Przypisanie pinu LED_BUILTIN do kanału PWM 0
   #else   // Dla ESP8266
-    WiFi.mode(WIFI_OFF);
-    WiFi.forceSleepBegin();
     delay(1);
     pinMode(LED_BUILTIN, OUTPUT); // Ustawienie pinu LED_BUILTIN jako wyjście
     analogWriteRange(1023);       // Ustawienie zakresu PWM 0-1023
@@ -64,4 +80,9 @@ void loop() {
   handleButtonPress();
   updateTimers();
   handleWiFi(); // Dodajemy obsługę Wi-Fi
+
+  // Obsługa Blynk (wywoływane tylko, gdy Wi-Fi jest połączone)
+  if (wifiConnected) {
+    Blynk.run();
+  }
 }

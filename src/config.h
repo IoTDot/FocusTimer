@@ -1,13 +1,16 @@
-// src/config.h
-
 #ifndef CONFIG_H
 #define CONFIG_H
 
 #include <Arduino.h>
 
 // Nazwa i hasło sieci Wi-Fi
-#define WIFI_SSID "your_wifi_ssid"
-#define WIFI_PASSWORD "your_wifi_password"
+#define WIFI_SSID "test_2.9"
+#define WIFI_PASSWORD "zaq1@WSX"
+
+// Konfiguracja Blynk
+#define BLYNK_TEMPLATE_ID "TMPL40mL89b8h"
+#define BLYNK_TEMPLATE_NAME "FocusTimer"
+#define BLYNK_AUTH_TOKEN "aDI5gWpKXwwmWI5Z-n5IHl35ZVV4zgDa"
 
 // Deklaracje zmiennych globalnych związanych z Wi-Fi
 extern bool wifiEnabled;
@@ -32,7 +35,7 @@ extern bool wifiConnecting;
   // Dioda LED jest aktywna w stanie HIGH na ESP32
   #define LED_ACTIVE_LOW false
 
-#else
+#elif defined(ESP8266)
   #include <ESP8266WiFi.h>
   #define BUTTON_BOOT 0
 
@@ -83,6 +86,18 @@ extern bool isConfirmationDisplay;
 extern unsigned long confirmationStartTime;
 extern unsigned long confirmationDuration;
 extern unsigned long confirmationValue;
-extern char confirmationLabel[10]; // Przywrócona deklaracja confirmationLabel
+extern char confirmationLabel[10];
+
+// Deklaracje zmiennych globalnych dla statystyk
+extern unsigned long totalStudyTime;
+extern unsigned long totalBreakTime;
+extern unsigned int studySessions;
+
+// Definicje wirtualnych pinów Blynk
+#define PIN_MAIN_TIMER V0
+#define PIN_BREAK_TIMER V1
+#define PIN_TOTAL_STUDY_TIME V2
+#define PIN_STUDY_SESSIONS V3
+#define PIN_TOTAL_BREAK_TIME V4
 
 #endif // CONFIG_H

@@ -1,32 +1,35 @@
 // src/timer.cpp
+
 #include "config.h"
 #include "timer.h"
 #include "display.h"
-#include "wifi_manager.h" // Aby znać stan Wi-Fi
+#include "wifi_manager.h"
+
+#ifdef ESP32
+  #include <BlynkSimpleEsp32.h>
+#elif defined(ESP8266)
+  #include <BlynkSimpleEsp8266.h>
+#endif
+
+// Deklaracja obiektu Blynk jako extern
+extern BlynkWifi Blynk;
 
 void updateTimers() {
   unsigned long currentTime = millis();
+
+  // Obsługa Wi-Fi i Blynk
+  handleWiFi();
 
   // Sprawdzenie, czy mamy wyświetlić potwierdzenie
   if (isConfirmationDisplay) {
     if (currentTime - confirmationStartTime >= confirmationDuration) {
       isConfirmationDisplay = false;
-      // Czyścimy wyświetlacz po zakończeniu wyświetlania potwierdzenia
       display->clearDisplay();
     } else {
-      // Czyścimy wyświetlacz i wyświetlamy potwierdzenie
       display->clearDisplay();
-
-      // Wyświetlamy czas potwierdzenia
       displayTime(confirmationValue, false, confirmationLabel);
-
-      // Wyświetlamy ikonę Wi-Fi
       displayWiFiIcon();
-
-      // Aktualizujemy wyświetlacz
       display->display();
-
-      // Wstrzymujemy dalsze przetwarzanie w updateTimers()
       return;
     }
   }
@@ -34,7 +37,6 @@ void updateTimers() {
   unsigned long elapsedTime = currentTime - startTime;
   unsigned long remainingTime;
 
-  // Czyścimy wyświetlacz na początku (jeśli nie było potwierdzenia)
   display->clearDisplay();
 
   if (isShortBreakCountdown) {
@@ -45,24 +47,22 @@ void updateTimers() {
         isShortBreak = false;  // Przejście do głównego odliczania po krótkiej przerwie
       } else {
         isShortBreak = true;   // Przejście do przerwy po głównym odliczaniu
+
+        // Zliczanie sesji nauki po zakończeniu głównego timera
+        studySessions++;
+        if (wifiConnected) {
+          Blynk.virtualWrite(PIN_STUDY_SESSIONS, studySessions);
+        }
       }
-      // Synchronizacja startTime z globalnym timerem
       unsigned long elapsedGlobalTime = millis() - globalStartTime;
       unsigned long remainder = elapsedGlobalTime % 1000;
       startTime = millis() - remainder;
     }
 
-    // Rysujemy odliczanie krótkiej przerwy
     displayTime(remainingTime, true, "");
-
-    // Wyświetlamy ikonę Wi-Fi
     displayWiFiIcon();
-
-    // Aktualizujemy wyświetlacz
     display->display();
 
-    // Sterowanie diodą LED
-    // Włącz LED z mocą 40%
     #ifdef ESP32
       int pwmValue = 63; // 25% jasności LED (zakres PWM 0 do 255)
       ledcWrite(0, pwmValue);
@@ -74,8 +74,6 @@ void updateTimers() {
         analogWrite(LED_BUILTIN, pwmValue);
       }
     #endif
-
-    // Nie wyświetlamy globalnego licznika podczas 6-sekundowego odliczania
 
   } else {
     // Wyłączamy LED
@@ -92,29 +90,29 @@ void updateTimers() {
     if (!isShortBreak && !isLongBreak) {
       remainingTime = timerDuration - elapsedTime;
       if (elapsedTime >= timerDuration) {
+        // Dodajemy czas do totalStudyTime
+        totalStudyTime += timerDuration;
+        if (wifiConnected) {
+          Blynk.virtualWrite(PIN_TOTAL_STUDY_TIME, totalStudyTime / 60000); // W minutach
+        }
+
         isLongBreak = true;
         isShortBreakCountdown = true; // Dodaj krótkie odliczanie po głównym odliczaniu
-        // Synchronizacja startTime z globalnym timerem
         unsigned long elapsedGlobalTime = millis() - globalStartTime;
         unsigned long remainder = elapsedGlobalTime % 1000;
         startTime = millis() - remainder;
       }
-    } else if (isLongBreak) {
+    } else if (isLongBreak || isShortBreak) {
       remainingTime = breakTimerDuration - elapsedTime;
       if (elapsedTime >= breakTimerDuration) {
+        // Dodajemy czas do totalBreakTime
+        totalBreakTime += breakTimerDuration;
+        if (wifiConnected) {
+          Blynk.virtualWrite(PIN_TOTAL_BREAK_TIME, totalBreakTime / 60000); // W minutach
+        }
+
         isLongBreak = false;
-        isShortBreakCountdown = true; // Dodaj krótkie odliczanie po długiej przerwie
-        // Synchronizacja startTime z globalnym timerem
-        unsigned long elapsedGlobalTime = millis() - globalStartTime;
-        unsigned long remainder = elapsedGlobalTime % 1000;
-        startTime = millis() - remainder;
-      }
-    } else if (isShortBreak) {
-      remainingTime = breakTimerDuration - elapsedTime;
-      if (elapsedTime >= breakTimerDuration) {
-        isShortBreak = false;
-        isShortBreakCountdown = true; // Dodaj krótkie odliczanie po krótkiej przerwie
-        // Synchronizacja startTime z globalnym timerem
+        isShortBreakCountdown = true; // Dodaj krótkie odliczanie po przerwie
         unsigned long elapsedGlobalTime = millis() - globalStartTime;
         unsigned long remainder = elapsedGlobalTime % 1000;
         startTime = millis() - remainder;
@@ -127,15 +125,29 @@ void updateTimers() {
       displayTime(remainingTime, false, "");
     }
 
-    // Wyświetlamy globalny licznik czasu
     displayGlobalTimer();
-
-    // Wyświetlamy ikonę Wi-Fi
     displayWiFiIcon();
-
-    // Aktualizujemy wyświetlacz
     display->display();
   }
 
   delay(100);
+}
+
+// Funkcje Blynk do obsługi wirtualnych pinów
+BLYNK_WRITE(PIN_MAIN_TIMER) {
+  int mainTimerValue = param.asInt(); // Odczytujemy wartość z aplikacji
+  mainTimerMinutes = mainTimerValue;
+  timerDuration = mainTimerMinutes * 60 * 1000;
+  Serial.print("Main Timer set to: ");
+  Serial.print(mainTimerMinutes);
+  Serial.println(" minutes");
+}
+
+BLYNK_WRITE(PIN_BREAK_TIMER) {
+  int breakTimerValue = param.asInt(); // Odczytujemy wartość z aplikacji
+  breakTimerMinutes = breakTimerValue;
+  breakTimerDuration = breakTimerMinutes * 60 * 1000;
+  Serial.print("Break Timer set to: ");
+  Serial.print(breakTimerMinutes);
+  Serial.println(" minutes");
 }
